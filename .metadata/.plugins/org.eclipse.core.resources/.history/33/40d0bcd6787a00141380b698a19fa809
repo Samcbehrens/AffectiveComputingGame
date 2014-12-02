@@ -10,7 +10,7 @@ public class Emotion {
 	public enum EmotionType {SAD, HAPPY, ANGER, DISGUST, FEAR, SURPRISE, NULL};
 	
 	private EmotionType finalFeel=EmotionType.NULL;
-	private Intensity 	finalIntensity=new Intensity(0);
+	private Intensity 	finalIntensity=null;
 	
 	/*
 	 * Constructor for type. Holds emotion which is an enum and intensity of emotion. 
@@ -28,26 +28,6 @@ public class Emotion {
 	public void setTotalemotion(EmotionType givenFeel, Intensity givenIntensity){
 		this.finalFeel=givenFeel;
 		this.finalIntensity=givenIntensity;
-	}
-	
-	/*
-	 * set new intensity float number 
-	 */
-	public void setIntensitynumber(float newIntensityfloat){
-		this.finalIntensity.setIntensity(newIntensityfloat);
-	}
-	
-	/*
-	 * set new intensity float object
-	 */
-	public void setIntensityobject(Intensity newIntensityobject){
-		this.finalIntensity=newIntensityobject;
-	}
-	/*
-	 * setter method for the finalfeel enum field
-	 */
-	public void setEmotionEnum(EmotionType emotionEnum){
-		this.finalFeel=emotionEnum;
 	}
 	
 	/*

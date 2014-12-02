@@ -31,26 +31,6 @@ public class Emotion {
 	}
 	
 	/*
-	 * set new intensity float number 
-	 */
-	public void setIntensitynumber(float newIntensityfloat){
-		this.finalIntensity.setIntensity(newIntensityfloat);
-	}
-	
-	/*
-	 * set new intensity float object
-	 */
-	public void setIntensityobject(Intensity newIntensityobject){
-		this.finalIntensity=newIntensityobject;
-	}
-	/*
-	 * setter method for the finalfeel enum field
-	 */
-	public void setEmotionEnum(EmotionType emotionEnum){
-		this.finalFeel=emotionEnum;
-	}
-	
-	/*
 	 * prints emotion fields for debugging
 	 */
 	public void printEmotion(){

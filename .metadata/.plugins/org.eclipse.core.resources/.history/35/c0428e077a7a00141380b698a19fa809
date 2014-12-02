@@ -43,12 +43,6 @@ public class Emotion {
 	public void setIntensityobject(Intensity newIntensityobject){
 		this.finalIntensity=newIntensityobject;
 	}
-	/*
-	 * setter method for the finalfeel enum field
-	 */
-	public void setEmotionEnum(EmotionType emotionEnum){
-		this.finalFeel=emotionEnum;
-	}
 	
 	/*
 	 * prints emotion fields for debugging

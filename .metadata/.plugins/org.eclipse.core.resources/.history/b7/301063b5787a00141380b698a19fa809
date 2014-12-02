@@ -1,0 +1,13 @@
+package types;
+
+public class Intensity {
+	private float intensity;
+	
+	public Intensity(float constructorIntensity){
+		this.intensity=constructorIntensity;
+	}
+	
+	public void setIntensity(float newIntensity){
+		this.intensity=newIntensity;
+	}
+}
