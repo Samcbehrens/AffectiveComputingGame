@@ -1,0 +1,6 @@
+package types;
+
+public class Emotion {
+
+	public enum EmotionType {SAD, HAPPY, ANGER, DISGUST, FEAR, SURPRISE};
+}

@@ -9,7 +9,7 @@ public class Emotion {
 	
 
 	public enum EmotionType {SAD, HAPPY, ANGER, DISGUST, FEAR, SURPRISE, NULL};
-	
+		
 	EmotionType finalFeel=EmotionType.NULL;
 	Intensity 	finalIntensity=null;
 	
@@ -29,6 +29,12 @@ public class Emotion {
 	public void setTotalemotion(EmotionType givenFeel, Intensity givenIntensity){
 		this.finalFeel=givenFeel;
 		this.finalIntensity=givenIntensity;
+	}
+	/*
+	 * returns emotion
+	 */
+	public Emotion returnEmotion(){
+		return this.Emotion;
 	}
 	
 	/*

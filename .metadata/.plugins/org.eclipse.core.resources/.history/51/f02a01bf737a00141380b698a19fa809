@@ -1,0 +1,14 @@
+package types;
+
+public class Emotion {
+
+	public enum EmotionType {SAD, HAPPY, ANGER, DISGUST, FEAR, SURPRISE, NULL};
+	
+	EmotionType finalEmotion=NULL;
+	Intensity 	finalIntensity=null;
+	
+	public void setTotalemotion(EmotionType givenEmotion, Intensity givenIntensity){
+		this.finalEmotion=givenEmotion;
+		this.finalIntensity=givenIntensity;
+	}
+}
