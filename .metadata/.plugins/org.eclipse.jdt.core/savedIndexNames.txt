@@ -1,0 +1,2 @@
+INDEX VERSION 1.127+/Users/sambehrens/Documents/Fall 2014/AffectivComp/KinectFinalProject/.metadata/.plugins/org.eclipse.jdt.core
+1195237751.index
