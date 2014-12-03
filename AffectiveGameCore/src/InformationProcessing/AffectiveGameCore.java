@@ -2,6 +2,12 @@ package InformationProcessing;
 
 public class AffectiveGameCore {
 	
-	p
+	public AffectiveGameCore(){
+		
+	}
+	
+	public static void main(String args[]){
+		
+	}
 
 }
