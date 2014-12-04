@@ -5,6 +5,10 @@
 		<item value="472" key="DIALOG_HEIGHT"/>
 		<item value="1|.Helvetica Neue DeskInterface|11.0|0|COCOA|1|.HelveticaNeueDeskInterface-Regular" key="DIALOG_FONT_NAME"/>
 	</section>
+	<section name="RefactoringWizard.Convert from JUnit">
+		<item value="427" key="height"/>
+		<item value="767" key="width"/>
+	</section>
 	<section name="RefactoringWizard.preview">
 		<item value="400" key="height"/>
 		<item value="600" key="width"/>
