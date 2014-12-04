@@ -1,0 +1,279 @@
+/***
+ * since bluecove does not work on systems > OSX10.8 I am trying to figure out the bluetooth
+ * java bluetooth api instead
+ *if interested in the source example code and guide-->http://coweb.cc.gatech.edu/sysHackfest/uploads/126/JSR82-spec_1.0a.pdf
+ */
+
+import javax.bluetooth.*;
+import javax.bluetooth.UUID;
+import javax.microedition.io.*;
+import javax.obex.*;
+
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+public class TestBluetooth implements DiscoveryListener {
+
+	private DiscoveryAgent agent;
+
+	private int maxServiceSearches = 0;
+
+	private int serviceSearchCount;
+
+	private int transactionID[];
+
+	private ServiceRecord record;
+
+	private Vector deviceList;
+
+	public TestBluetooth() throws BluetoothStateException{
+
+		/*
+		 * Retrieve the local Bluetooth device object.
+		 */
+		LocalDevice local = LocalDevice.getLocalDevice();
+
+		/*
+		 * Retrieve the DiscoveryAgent object that allows us to perform device
+		 * and service discovery.
+		 */
+		agent = local.getDiscoveryAgent();
+
+
+		/*
+		 * Retrieve the max number of concurrent service searches that can
+		 * exist at any one time.
+		 */
+		try {
+			maxServiceSearches = Integer.parseInt(LocalDevice.getProperty("bluetooth.sd.trans.max"));
+		}
+		catch (NumberFormatException e) {
+			System.out.println("General Application Error");
+			System.out.println("\tNumberFormatException: " + e.getMessage());
+		}	
+		transactionID = new int[maxServiceSearches];
+		// Initialize the transaction list
+		for (int i = 0; i < maxServiceSearches; i++) {
+			transactionID[i] = -1;
+		}
+		record = null;
+		deviceList = new Vector();
+	}
+
+	/**
+	 * Adds the transaction table with the transaction ID provided.
+	 *
+	 * @param trans the transaction ID to add to the table
+	 */
+	private void addToTransactionTable(int trans) {
+		for (int i = 0; i < transactionID.length; i++) {
+			if (transactionID[i] == -1) {
+				transactionID[i] = trans;
+				return;
+			}
+		}
+	}
+	/**
+	 * Removes the transaction from the transaction ID table.
+	 *
+	 * @param trans the transaction ID to delete from the table
+	 */
+	private void removeFromTransactionTable(int trans) {
+		for (int i = 0; i < transactionID.length; i++) {
+			if (transactionID[i] == trans) {
+				transactionID[i] = -1;
+				return;
+			}
+		}
+	}
+	private boolean searchServices(RemoteDevice[] devList) {
+		UUID[] searchList = new UUID[2];
+		/*
+		 * Add the UUID for L2CAP to make sure that the service record
+		 * found will support L2CAP. This value is defined in the
+		 * Bluetooth Assigned Numbers document.
+		 */
+		searchList[0] = new UUID(0x0100);
+		/*
+		 * Add the UUID for the printer service that we are going to use to
+		 * the list of UUIDs to search for. (a fictional printer service UUID)
+		 */
+
+		searchList[1] = new UUID("1020304050d0708093a1b121d1e1f100", false);
+		/*
+		 * Start a search on as many devices as the system can support.
+		 */
+		for (int i = 0; i < devList.length; i++) {
+			/*
+			 * If we found a service record for the printer service, then
+			 * we can end the search.
+			 */
+			if (record != null) {
+				return true;
+			}
+			try {
+				int trans = agent.searchServices(null, searchList, devList[i],
+						this);
+				addToTransactionTable(trans);
+			} catch (BluetoothStateException e) {
+				/*
+				 * Failed to start the search on this device, try another
+				 * device.
+				 */
+			}
+			/*
+			 * Determine if another search can be started. If not, wait for
+			 * a service search to end.
+			 */
+			synchronized (this) {
+				serviceSearchCount++;
+				if (serviceSearchCount == maxServiceSearches) {
+					try {
+						this.wait();
+					} catch (Exception e) {
+					}
+				}
+			}
+		}
+
+		/*
+		 * Wait until all the service searches have completed.
+		 */
+		while (serviceSearchCount > 0) {
+			synchronized (this) {
+				try {
+					this.wait();
+				} catch (Exception e) {
+				}
+			}
+		}
+		if (record != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	/**
+	 * Finds the first bluetooth device that is available to print to.
+	 *
+	 * @return the service record of the device that was found; null if no
+	 * device service was found
+	 */
+	public ServiceRecord findBit() {
+		/*
+		 * If there are any devices that have been found by a recent inquiry,
+		 * we don't need to spend the time to complete an inquiry.
+		 */
+		RemoteDevice[] devList = agent.retrieveDevices(DiscoveryAgent.CACHED);
+		if (devList != null) {
+			if (searchServices(devList)) {
+				return record;
+			}
+		}
+
+		/*
+		 * Did not find a printer service in the list of pre-known or cached
+		 * devices. So start an inquiry to find all devices that could be a
+		 * printer and do a search on those devices.
+		 */
+		/* Start an inquiry to find a printer */
+		try {
+			agent.startInquiry(DiscoveryAgent.GIAC, this);
+			/*
+			 * Wait until all the devices are found before trying to start the
+			 * service search.
+			 */
+			synchronized (this) {
+				try {
+					this.wait();
+				} catch (Exception e) {
+				}
+			}
+		} catch (BluetoothStateException e) {
+			System.out.println("Unable to find devices to search");
+		}
+		if (deviceList.size() > 0) {
+			devList = new RemoteDevice[deviceList.size()];
+			deviceList.copyInto(devList);
+			if (searchServices(devList)) {
+				return record;
+			}
+		}
+		return null;
+	}
+
+	public static void main(String[] args){
+		TestBluetooth bluetooth=null;
+
+
+		try {
+			bluetooth = new TestBluetooth();
+		} catch (BluetoothStateException e) {
+			System.out.println("Failed to start Bluetooth System");
+			System.out.println("\tBluetoothStateException: " +
+					e.getMessage());
+		}
+
+
+		/*
+		 * Find a bitalino in the local area
+		 */
+		ServiceRecord bitService = bluetooth.findBit();
+
+		if (bitService != null) {
+			/*
+			 * Determine if this service will communicate over RFCOMM or
+			 * L2CAP by retrieving the connection string.
+			 * */
+			String conURL = bitService.getConnectionURL(ServiceRecord.NOAUTHENTICATE_NOENCRYPT, false);
+			int index= conURL.indexOf(':');
+			String protocol= conURL.substring(0, index);
+			if (protocol.equals("btspp")) {
+				/*
+				 * Since this printer service uses RFCOMM, create an RFCOMM
+				 * connection and send the data over RFCOMM.
+				 */
+				/* code to call RFCOMM client goes here */
+			} else if (protocol.equals("btl2cap")) {
+				/*
+				 * Since this service uses L2CAP, create an L2CAP
+				 * connection to the service and send the data to the
+				 * service over L2CAP.
+				 */
+				/* code to call L2CAP client goes here */
+			} else {
+				System.out.println("Unsupported Protocol");
+			}
+		} else {
+			System.out.println("No Printer was found");
+		}
+	}
+
+
+
+	@Override
+	public void deviceDiscovered(RemoteDevice arg0, DeviceClass arg1) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void inquiryCompleted(int arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void serviceSearchCompleted(int arg0, int arg1) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void servicesDiscovered(int arg0, ServiceRecord[] arg1) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

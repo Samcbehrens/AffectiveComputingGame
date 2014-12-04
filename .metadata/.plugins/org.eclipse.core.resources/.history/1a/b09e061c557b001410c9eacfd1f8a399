@@ -1,0 +1,53 @@
+/***
+ * since bluecove does not work on systems > OSX10.8 I am trying to figure out the bluetooth
+ * java bluetooth api instead
+ *if interested in the source example code and guide-->http://coweb.cc.gatech.edu/sysHackfest/uploads/126/JSR82-spec_1.0a.pdf
+ */
+
+import javax.bluetooth.*;
+import javax.microedition.io.*;
+import javax.obex.*;
+import java.util.*;
+
+public class TestBluetooth implements DiscoveryListener {
+	
+	private DiscoveryAgent agent;
+	
+	private int maxServiceSearches = 0;
+	
+	private int serviceSearchCount;
+	
+	private int transactionID[];
+	
+	private ServiceRecord record;
+	
+	private Vector deviceList;
+	
+	public TestBluetooth(){
+	}
+
+	@Override
+	public void deviceDiscovered(RemoteDevice arg0, DeviceClass arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void inquiryCompleted(int arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void serviceSearchCompleted(int arg0, int arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void servicesDiscovered(int arg0, ServiceRecord[] arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

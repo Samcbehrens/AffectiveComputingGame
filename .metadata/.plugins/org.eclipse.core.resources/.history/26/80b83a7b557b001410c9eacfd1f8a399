@@ -1,0 +1,100 @@
+/***
+ * since bluecove does not work on systems > OSX10.8 I am trying to figure out the bluetooth
+ * java bluetooth api instead
+ *if interested in the source example code and guide-->http://coweb.cc.gatech.edu/sysHackfest/uploads/126/JSR82-spec_1.0a.pdf
+ */
+
+import javax.bluetooth.*;
+import javax.microedition.io.*;
+import javax.obex.*;
+import java.util.*;
+
+public class TestBluetooth implements DiscoveryListener {
+	
+	private DiscoveryAgent agent;
+	
+	private int maxServiceSearches = 0;
+	
+	private int serviceSearchCount;
+	
+	private int transactionID[];
+	
+	private ServiceRecord record;
+	
+	private Vector deviceList;
+	
+	public TestBluetooth() throws BluetoothStateException{
+		
+		/*
+		* Retrieve the local Bluetooth device object.
+		*/
+		LocalDevice local = LocalDevice.getLocalDevice();
+		
+		/*
+		* Retrieve the DiscoveryAgent object that allows us to perform device
+		* and service discovery.
+		*/
+		agent = local.getDiscoveryAgent();
+		
+		
+		/*
+		* Retrieve the max number of concurrent service searches that can
+		* exist at any one time.
+		*/
+		try {
+			maxServiceSearches = Integer.parseInt(LocalDevice.getProperty("bluetooth.sd.trans.max"));
+			}
+		catch (NumberFormatException e) {
+			System.out.println("General Application Error");
+			System.out.println("\tNumberFormatException: " + e.getMessage());
+		}	
+		transactionID = new int[maxServiceSearches];
+		// Initialize the transaction list
+		for (int i = 0; i < maxServiceSearches; i++) {
+			transactionID[i] = -1;
+		}
+		record = null;
+		deviceList = new Vector();
+		}
+	
+	
+	public static void main(String[] args){
+		TestBluetooth bluetooth=null;
+		
+		
+		try {
+			bluetooth = new TestBluetooth();
+			} catch (BluetoothStateException e) {
+			System.out.println("Failed to start Bluetooth System");
+			System.out.println("\tBluetoothStateException: " +
+			e.getMessage());
+	}
+
+		
+
+
+	@Override
+	public void deviceDiscovered(RemoteDevice arg0, DeviceClass arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void inquiryCompleted(int arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void serviceSearchCompleted(int arg0, int arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void servicesDiscovered(int arg0, ServiceRecord[] arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

@@ -1,0 +1,41 @@
+/***
+ * since bluecove does not work on systems > OSX10.8 I am trying to figure out the bluetooth
+ * java bluetooth api instead
+ *
+ */
+
+import javax.bluetooth.*;
+import javax.microedition.io.*;
+import javax.obex.*;
+
+public class TestBluetooth implements DiscoveryListener {
+	
+	public TestBluetooth(){
+		BCC.setPortName("COM1"); 
+	}
+
+	@Override
+	public void deviceDiscovered(RemoteDevice arg0, DeviceClass arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void inquiryCompleted(int arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void serviceSearchCompleted(int arg0, int arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void servicesDiscovered(int arg0, ServiceRecord[] arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

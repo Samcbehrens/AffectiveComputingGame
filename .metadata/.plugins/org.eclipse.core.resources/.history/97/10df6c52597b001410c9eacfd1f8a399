@@ -15,7 +15,6 @@
 import java.io.FileWriter;
 import java.util.logging.Logger;
 import javax.microedition.io.*;
-import javax.bluetooth.*;
 
 import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
