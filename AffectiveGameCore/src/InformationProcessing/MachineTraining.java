@@ -1,0 +1,13 @@
+/**
+ * Created to train the program to recognize basic emotions
+ * 
+ *
+ *
+ */
+public class MachineTraining {
+	
+	public MachineTraining(){
+		
+	}
+
+}
